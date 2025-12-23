@@ -1,0 +1,11 @@
+export declare class AppService {
+    getHello(): string;
+    getHealth(): {
+        status: string;
+        timestamp: string;
+        service: string;
+        version: string;
+        environment: string;
+        database: string;
+    };
+}
