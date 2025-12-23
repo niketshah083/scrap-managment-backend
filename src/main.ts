@@ -7,12 +7,20 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Enable CORS for frontend
+<<<<<<< Updated upstream
    app.enableCors({
+=======
+ app.enableCors({
+>>>>>>> Stashed changes
       origin: '*', // Frontend URL
       methods: 'GET,POST,PUT,DELETE,OPTIONS',
       credentials: true,
     });
+<<<<<<< Updated upstream
   
+=======
+
+>>>>>>> Stashed changes
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({

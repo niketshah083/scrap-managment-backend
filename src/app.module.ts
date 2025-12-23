@@ -12,6 +12,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { QCModule } from './qc/qc.module';
 import { AuditModule } from './audit/audit.module';
 import { VendorModule } from './vendor/vendor.module';
+import { PdfModule } from './pdf/pdf.module';
 // import { EvidenceModule } from './evidence/evidence.module';
 // import { WeighbridgeModule } from './weighbridge/weighbridge.module';
 // import { InspectionModule } from './inspection/inspection.module';
@@ -38,6 +39,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     TransactionModule,
     QCModule,
     VendorModule,
+    PdfModule,
     // WeighbridgeModule,
     // InspectionModule,
     // NotificationModule,

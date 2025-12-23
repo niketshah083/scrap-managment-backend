@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GRN - {{transactionNumber}}</title>
+  <style>
+    @page { size: A4; margin: 12mm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      font-size: 10pt; 
+      line-height: 1.4; 
+      color: #1a1f36;
+      background: white;
+    }
+    .page { 
+      width: 100%; 
+      max-width: 210mm;
+      padding: 8mm;
+      page-break-after: always;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #6366f1;
+      margin-bottom: 16px;
+    }
+    .company-info h1 { font-size: 18pt; font-weight: 700; color: #6366f1; margin-bottom: 4px; }
+    .company-info p { font-size: 9pt; color: #64748b; line-height: 1.3; }
+    .doc-badge { text-align: right; }
+    .doc-badge h2 { font-size: 11pt; color: #1a1f36; margin-bottom: 4px; }
+    .doc-number { font-size: 14pt; font-weight: 700; color: #6366f1; font-family: 'Courier New', monospace; }
+    .date { font-size: 9pt; color: #64748b; margin-top: 4px; }
+    .status-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 8pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+    .status-active { background: #fef3c7; color: #b45309; }
+    .status-completed { background: #d1fae5; color: #059669; }
+    .status-rejected { background: #fee2e2; color: #dc2626; }
+
+    /* Info Grid */
+    .info-grid { display: flex; gap: 16px; margin-bottom: 16px; }
+    .info-box { 
+      flex: 1; 
+      background: #f8fafc; 
+      border-radius: 8px; 
+      padding: 12px; 
+      border-left: 3px solid #6366f1; 
+    }
+    .info-box h3 { 
+      font-size: 9pt; 
+      color: #6366f1; 
+      text-transform: uppercase; 
+      margin-bottom: 8px; 
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .info-box p { font-size: 9pt; color: #475569; margin-bottom: 4px; }
+    .info-box p strong { color: #1a1f36; }
+
+    /* Section Title */
+    .section-title { 
+      font-size: 11pt; 
+      font-weight: 600; 
+      color: #1a1f36; 
+      margin: 16px 0 10px;
+      padding-bottom: 6px; 
+      border-bottom: 2px solid #e2e8f0; 
+    }
+
+    /* Weight Section */
+    .weight-section { 
+      background: #f8fafc; 
+      border-radius: 8px; 
+      padding: 14px; 
+      margin-bottom: 16px; 
+    }
+    .weight-grid { display: flex; gap: 12px; text-align: center; }
+    .weight-item { flex: 1; padding: 8px; }
+    .weight-item h4 { font-size: 8pt; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
+    .weight-item .value { font-size: 16pt; font-weight: 700; color: #1a1f36; }
+    .weight-item.highlight { background: #eef2ff; border-radius: 8px; }
+    .weight-item.highlight .value { color: #6366f1; }
+
+    /* Steps Timeline */
+    .steps-container { margin-bottom: 16px; }
+    .step-item { 
+      display: flex; 
+      gap: 12px; 
+      margin-bottom: 12px;
+      page-break-inside: avoid;
+    }
+    .step-indicator { display: flex; flex-direction: column; align-items: center; width: 32px; }
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10pt;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .step-item.completed .step-number { background: #10b981; color: white; }
+    .step-item.active .step-number { background: #6366f1; color: white; }
+    .step-item.pending .step-number { background: #e2e8f0; color: #64748b; }
+    .step-line { 
+      width: 2px; 
+      flex: 1; 
+      min-height: 20px;
+      background: #e2e8f0; 
+      margin: 4px 0;
+    }
+    .step-item.completed .step-line { background: #10b981; }
+    .step-content { flex: 1; padding-bottom: 8px; }
+    .step-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 4px; 
+    }
+    .step-name { font-size: 10pt; font-weight: 600; color: #1a1f36; }
+    .step-time { font-size: 8pt; color: #10b981; }
+    .step-desc { font-size: 9pt; color: #64748b; margin-bottom: 8px; }
+
+    /* Step Data */
+    .step-data {
+      background: #f8fafc;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 8px;
+    }
+    .step-data-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 8px; 
+    }
+    .data-item { display: flex; flex-direction: column; gap: 2px; }
+    .data-label { font-size: 8pt; color: #64748b; text-transform: uppercase; }
+    .data-value { font-size: 9pt; font-weight: 500; color: #1a1f36; }
+
+    /* Evidence Images */
+    .evidence-section { margin-top: 10px; }
+    .evidence-title { font-size: 9pt; font-weight: 600; color: #6366f1; margin-bottom: 8px; }
+    .evidence-grid { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 8px; 
+    }
+    .evidence-item { 
+      border: 1px solid #e2e8f0; 
+      border-radius: 6px; 
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+    .evidence-item img { 
+      width: 100%; 
+      height: 80px; 
+      object-fit: cover; 
+      display: block;
+    }
+    .evidence-item .caption { 
+      font-size: 7pt; 
+      color: #64748b; 
+      padding: 4px; 
+      text-align: center;
+      background: #f8fafc;
+    }
+
+    /* Summary */
+    .summary-section { display: flex; justify-content: flex-end; margin: 16px 0; }
+    .summary-box { 
+      width: 220px; 
+      background: #f8fafc; 
+      border-radius: 8px; 
+      padding: 12px; 
+    }
+    .summary-row { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 5px 0; 
+      font-size: 9pt; 
+    }
+    .summary-row.total { 
+      border-top: 2px solid #e2e8f0; 
+      margin-top: 8px; 
+      padding-top: 10px; 
+      font-size: 11pt; 
+      font-weight: 700; 
+    }
+    .summary-row.total .amount { color: #6366f1; }
+
+    /* Signatures */
+    .signatures { 
+      display: flex; 
+      gap: 20px; 
+      margin-top: 30px; 
+      padding-top: 20px; 
+      border-top: 1px solid #e2e8f0; 
+    }
+    .signature-box { flex: 1; text-align: center; }
+    .signature-line { 
+      border-top: 1px solid #1a1f36; 
+      margin-bottom: 6px; 
+      width: 100px; 
+      margin-left: auto; 
+      margin-right: auto; 
+    }
+    .signature-box p { font-size: 9pt; color: #64748b; }
+
+    /* Footer */
+    .footer { 
+      text-align: center; 
+      font-size: 8pt; 
+      color: #94a3b8; 
+      margin-top: 20px; 
+      padding-top: 12px; 
+      border-top: 1px solid #e2e8f0; 
+    }
+
+    /* QC Section */
+    .qc-section { margin-bottom: 16px; }
+    .qc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .qc-item { 
+      background: #f8fafc; 
+      border-radius: 6px; 
+      padding: 10px; 
+      text-align: center; 
+    }
+    .qc-item.pass { border-left: 3px solid #10b981; }
+    .qc-item.fail { border-left: 3px solid #ef4444; }
+    .qc-label { font-size: 8pt; color: #64748b; margin-bottom: 4px; }
+    .qc-value { font-size: 12pt; font-weight: 700; color: #1a1f36; }
+    .qc-item.pass .qc-value { color: #10b981; }
+    .qc-item.fail .qc-value { color: #ef4444; }
+
+    @media print {
+      body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .page { page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <div class="header">
+      <div class="company-info">
+        <h1>{{companyName}}</h1>
+        <p>{{companyAddress}}</p>
+        <p>{{companyCity}}</p>
+        <p>GSTIN: {{gstin}}</p>
+      </div>
+      <div class="doc-badge">
+        <h2>GOODS RECEIPT NOTE</h2>
+        <div class="doc-number">{{transactionNumber}}</div>
+        <div class="date">Date: {{formatDate createdAt}}</div>
+        <span class="status-tag status-{{lowercase status}}">{{statusText status}}</span>
+      </div>
+    </div>
+
+    <!-- Basic Info -->
+    <div class="info-grid">
+      <div class="info-box">
+        <h3>Vendor Details</h3>
+        <p><strong>{{vendorName}}</strong></p>
+        <p>Vehicle: {{vehicleNumber}}</p>
+        <p>Driver: {{driverName}}</p>
+        <p>Contact: {{driverMobile}}</p>
+      </div>
+      <div class="info-box">
+        <h3>Order Details</h3>
+        <p>PO Number: <strong>{{poNumber}}</strong></p>
+        <p>Material: {{materialType}}</p>
+        <p>Grade: {{grade}}</p>
+        <p>Rate: ₹{{formatNumber rate}}/KG</p>
+      </div>
+    </div>
+
+    <!-- Weight Information -->
+    <h3 class="section-title">Weight Information</h3>
+    <div class="weight-section">
+      <div class="weight-grid">
+        <div class="weight-item">
+          <h4>Gross Weight</h4>
+          <div class="value">{{formatNumber grossWeight}} KG</div>
+        </div>
+        <div class="weight-item">
+          <h4>Tare Weight</h4>
+          <div class="value">{{formatNumber tareWeight}} KG</div>
+        </div>
+        <div class="weight-item highlight">
+          <h4>Net Weight</h4>
+          <div class="value">{{formatNumber netWeight}} KG</div>
+        </div>
+      </div>
+    </div>
+
+    {{#if hasQCData}}
+    <!-- QC Results -->
+    <h3 class="section-title">Quality Control Results</h3>
+    <div class="qc-section">
+      <div class="qc-grid">
+        <div class="qc-item {{#if qcPassed}}pass{{else}}fail{{/if}}">
+          <div class="qc-label">Quality Grade</div>
+          <div class="qc-value">{{qcGrade}}</div>
+        </div>
+        <div class="qc-item">
+          <div class="qc-label">Contamination</div>
+          <div class="qc-value">{{qcContamination}}%</div>
+        </div>
+        <div class="qc-item">
+          <div class="qc-label">Moisture</div>
+          <div class="qc-value">{{qcMoisture}}%</div>
+        </div>
+        <div class="qc-item {{#if qcPassed}}pass{{else}}fail{{/if}}">
+          <div class="qc-label">Status</div>
+          <div class="qc-value">{{#if qcPassed}}PASS{{else}}FAIL{{/if}}</div>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    <!-- Step-wise Progress -->
+    <h3 class="section-title">Process Steps</h3>
+    <div class="steps-container">
+      {{#each steps}}
+      <div class="step-item {{status}}">
+        <div class="step-indicator">
+          <div class="step-number">
+            {{#if (eq status 'completed')}}✓{{else}}{{stepNumber}}{{/if}}
+          </div>
+          {{#unless @last}}<div class="step-line"></div>{{/unless}}
+        </div>
+        <div class="step-content">
+          <div class="step-header">
+            <span class="step-name">{{name}}</span>
+            {{#if completedAt}}<span class="step-time">{{formatDateTime completedAt}}</span>{{/if}}
+          </div>
+          <p class="step-desc">{{description}}</p>
+          
+          {{#if hasData}}
+          <div class="step-data">
+            <div class="step-data-grid">
+              {{#each dataItems}}
+              <div class="data-item">
+                <span class="data-label">{{label}}</span>
+                <span class="data-value">{{value}}</span>
+              </div>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
+
+          {{#if hasEvidence}}
+          <div class="evidence-section">
+            <div class="evidence-title">📷 Evidence Photos</div>
+            <div class="evidence-grid">
+              {{#each evidence}}
+              <div class="evidence-item">
+                <img src="{{url}}" alt="{{name}}" onerror="this.style.display='none'"/>
+                <div class="caption">{{name}}</div>
+              </div>
+              {{/each}}
+            </div>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+    <!-- Financial Summary -->
+    <div class="summary-section">
+      <div class="summary-box">
+        <div class="summary-row"><span>Net Weight</span><span>{{formatNumber netWeight}} KG</span></div>
+        <div class="summary-row"><span>Rate</span><span>₹{{formatNumber rate}}/KG</span></div>
+        <div class="summary-row"><span>Subtotal</span><span>₹{{formatCurrency subtotal}}</span></div>
+        <div class="summary-row"><span>GST (18%)</span><span>₹{{formatCurrency gstAmount}}</span></div>
+        <div class="summary-row total"><span>Grand Total</span><span class="amount">₹{{formatCurrency grandTotal}}</span></div>
+      </div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signatures">
+      <div class="signature-box"><div class="signature-line"></div><p>Gate Operator</p></div>
+      <div class="signature-box"><div class="signature-line"></div><p>QC Inspector</p></div>
+      <div class="signature-box"><div class="signature-line"></div><p>Weighbridge</p></div>
+      <div class="signature-box"><div class="signature-line"></div><p>Authorized Signatory</p></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>This is a computer-generated document. For queries, contact: operations@xyzmetals.com | +91 22 1234 5678</p>
+      <p>Generated on: {{formatDateTime generatedAt}}</p>
+    </div>
+  </div>
+</body>
+</html>

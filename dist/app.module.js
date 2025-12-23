@@ -20,6 +20,7 @@ const transaction_module_1 = require("./transaction/transaction.module");
 const qc_module_1 = require("./qc/qc.module");
 const audit_module_1 = require("./audit/audit.module");
 const vendor_module_1 = require("./vendor/vendor.module");
+const pdf_module_1 = require("./pdf/pdf.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -40,6 +41,7 @@ exports.AppModule = AppModule = __decorate([
             transaction_module_1.TransactionModule,
             qc_module_1.QCModule,
             vendor_module_1.VendorModule,
+            pdf_module_1.PdfModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [
