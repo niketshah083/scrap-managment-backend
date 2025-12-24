@@ -2,6 +2,7 @@ import { PurchaseOrderService, CreatePODto, UpdatePODto, POSearchResult, POValid
 export declare class PurchaseOrderController {
     private readonly poService;
     constructor(poService: PurchaseOrderService);
+    getAllPOs(tenantId: string): Promise<POSearchResult[]>;
     searchPOs(query: string, tenantId: string, limit?: number): Promise<POSearchResult[]>;
     getPendingPOs(tenantId: string): Promise<POSearchResult[]>;
     getPOsByVendor(vendorId: string, tenantId: string): Promise<POSearchResult[]>;

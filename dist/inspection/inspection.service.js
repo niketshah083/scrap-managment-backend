@@ -151,7 +151,6 @@ let InspectionService = class InspectionService {
             }
         }
         catch (notificationError) {
-            console.error('Failed to send inspection notification:', notificationError);
         }
         return {
             transactionId,

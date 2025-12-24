@@ -142,7 +142,6 @@ export class WorkflowController {
         }
       } catch (error) {
         // Fall back to defaults if DB query fails
-        console.error('Error fetching tenant configurations:', error);
       }
     }
     

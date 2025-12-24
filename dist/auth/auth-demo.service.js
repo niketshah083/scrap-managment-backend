@@ -103,7 +103,6 @@ let AuthDemoService = class AuthDemoService {
                     permissions: this.getDefaultPermissions(userData.role),
                 });
                 await this.userRepository.save(user);
-                console.log(`Created demo user: ${userData.email} (${userData.role})`);
             }
         }
     }

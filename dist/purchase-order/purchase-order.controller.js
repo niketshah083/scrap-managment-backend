@@ -21,6 +21,9 @@ let PurchaseOrderController = class PurchaseOrderController {
     constructor(poService) {
         this.poService = poService;
     }
+    async getAllPOs(tenantId) {
+        return this.poService.getAllPOs(tenantId);
+    }
     async searchPOs(query, tenantId, limit) {
         return this.poService.searchPOs(query, tenantId, limit || 10);
     }
@@ -56,6 +59,16 @@ let PurchaseOrderController = class PurchaseOrderController {
     }
 };
 exports.PurchaseOrderController = PurchaseOrderController;
+__decorate([
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all purchase orders for a tenant' }),
+    (0, swagger_1.ApiQuery)({ name: 'tenantId', description: 'Tenant UUID', required: true }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns all purchase orders' }),
+    __param(0, (0, common_1.Query)('tenantId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PurchaseOrderController.prototype, "getAllPOs", null);
 __decorate([
     (0, common_1.Get)('search'),
     (0, swagger_1.ApiOperation)({ summary: 'Search purchase orders by query string' }),

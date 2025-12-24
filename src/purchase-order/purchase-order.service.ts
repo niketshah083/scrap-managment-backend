@@ -380,6 +380,19 @@ export class PurchaseOrderService {
   }
 
   /**
+   * Get all POs for a tenant
+   */
+  async getAllPOs(tenantId: string): Promise<POSearchResult[]> {
+    const pos = await this.poRepository.find({
+      where: { tenantId, isActive: true },
+      relations: ['vendor'],
+      order: { createdAt: 'DESC' },
+    });
+
+    return pos.map(po => this.mapToSearchResult(po));
+  }
+
+  /**
    * Get all POs for a vendor
    */
   async getPOsByVendor(vendorId: string, tenantId: string): Promise<POSearchResult[]> {

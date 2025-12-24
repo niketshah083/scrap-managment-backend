@@ -63,6 +63,7 @@ export declare class PurchaseOrderService {
     private generatePONumber;
     updatePO(id: string, dto: UpdatePODto, userId?: string): Promise<PurchaseOrder>;
     cancelPO(id: string, reason?: string, userId?: string): Promise<PurchaseOrder>;
+    getAllPOs(tenantId: string): Promise<POSearchResult[]>;
     getPOsByVendor(vendorId: string, tenantId: string): Promise<POSearchResult[]>;
     getPendingAndPartialPOs(tenantId: string): Promise<POSearchResult[]>;
     getPendingPOs(tenantId: string): Promise<POSearchResult[]>;

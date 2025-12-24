@@ -230,8 +230,7 @@ export class InspectionService {
         }
       }
     } catch (notificationError) {
-      // Log notification error but don't fail the inspection
-      console.error('Failed to send inspection notification:', notificationError);
+      // Notification error - don't fail the inspection
     }
 
     return {

@@ -1,4 +1,4 @@
-import { VendorService } from './vendor.service';
+import { VendorService, VendorRiskScoring, VendorTrendAnalysis } from './vendor.service';
 import { Vendor } from '../entities/vendor.entity';
 export declare class CreateVendorDto {
     vendorName: string;
@@ -25,7 +25,19 @@ export declare class VendorController {
     private readonly vendorService;
     constructor(vendorService: VendorService);
     getAllVendors(tenantId: string): Promise<Vendor[]>;
+    getRealTimeMetrics(tenantId: string): Promise<{
+        totalVendors: number;
+        activeVendors: number;
+        highRiskVendors: number;
+        averageRejectionRate: number;
+    }>;
+    getPerformanceRanking(tenantId: string, limit?: string): Promise<{
+        topPerformers: VendorRiskScoring[];
+        worstPerformers: VendorRiskScoring[];
+    }>;
     getVendorById(id: string, tenantId: string): Promise<Vendor>;
+    getVendorRiskScoring(id: string, tenantId: string): Promise<VendorRiskScoring>;
+    getVendorTrends(id: string, tenantId: string, period?: 'DAILY' | 'WEEKLY' | 'MONTHLY'): Promise<VendorTrendAnalysis>;
     createVendor(createVendorDto: CreateVendorDto, tenantId: string): Promise<Vendor>;
     updateVendor(id: string, updateVendorDto: UpdateVendorDto, tenantId: string): Promise<Vendor>;
     toggleBlacklist(id: string, tenantId: string, body: {

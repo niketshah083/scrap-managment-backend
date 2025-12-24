@@ -130,7 +130,6 @@ let WorkflowController = class WorkflowController {
                 }
             }
             catch (error) {
-                console.error('Error fetching tenant configurations:', error);
             }
         }
         return defaultLevelConfigs;

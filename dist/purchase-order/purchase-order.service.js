@@ -228,6 +228,14 @@ let PurchaseOrderService = class PurchaseOrderService {
         await this.auditService.logPOCancellation(userId || 'system', savedPO.id, reason);
         return savedPO;
     }
+    async getAllPOs(tenantId) {
+        const pos = await this.poRepository.find({
+            where: { tenantId, isActive: true },
+            relations: ['vendor'],
+            order: { createdAt: 'DESC' },
+        });
+        return pos.map(po => this.mapToSearchResult(po));
+    }
     async getPOsByVendor(vendorId, tenantId) {
         const pos = await this.poRepository.find({
             where: { vendorId, tenantId, isActive: true },

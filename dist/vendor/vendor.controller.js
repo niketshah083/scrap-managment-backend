@@ -28,8 +28,20 @@ let VendorController = class VendorController {
     async getAllVendors(tenantId) {
         return this.vendorService.findAll(tenantId || 'test-tenant-1');
     }
+    async getRealTimeMetrics(tenantId) {
+        return this.vendorService.getVendorRealTimeMetrics(tenantId || 'test-tenant-1');
+    }
+    async getPerformanceRanking(tenantId, limit) {
+        return this.vendorService.getVendorPerformanceRanking(tenantId || 'test-tenant-1', limit ? parseInt(limit, 10) : 10);
+    }
     async getVendorById(id, tenantId) {
         return this.vendorService.findOne(id, tenantId || 'test-tenant-1');
+    }
+    async getVendorRiskScoring(id, tenantId) {
+        return this.vendorService.calculateVendorRiskScoring(id, tenantId || 'test-tenant-1');
+    }
+    async getVendorTrends(id, tenantId, period) {
+        return this.vendorService.getVendorTrendAnalysis(id, tenantId || 'test-tenant-1', period || 'MONTHLY');
     }
     async createVendor(createVendorDto, tenantId) {
         return this.vendorService.create(createVendorDto, tenantId || 'test-tenant-1');
@@ -56,6 +68,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], VendorController.prototype, "getAllVendors", null);
 __decorate([
+    (0, common_1.Get)('real-time-metrics'),
+    __param(0, (0, common_1.Query)('tenantId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], VendorController.prototype, "getRealTimeMetrics", null);
+__decorate([
+    (0, common_1.Get)('performance-ranking'),
+    __param(0, (0, common_1.Query)('tenantId')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], VendorController.prototype, "getPerformanceRanking", null);
+__decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Query)('tenantId')),
@@ -63,6 +90,23 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], VendorController.prototype, "getVendorById", null);
+__decorate([
+    (0, common_1.Get)(':id/risk-scoring'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Query)('tenantId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], VendorController.prototype, "getVendorRiskScoring", null);
+__decorate([
+    (0, common_1.Get)(':id/trends'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Query)('tenantId')),
+    __param(2, (0, common_1.Query)('period')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], VendorController.prototype, "getVendorTrends", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

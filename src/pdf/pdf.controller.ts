@@ -49,7 +49,6 @@ export class PdfController {
 
       res.end(pdfBuffer);
     } catch (error) {
-      console.error('PDF generation error:', error);
       throw new HttpException('Failed to generate PDF', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

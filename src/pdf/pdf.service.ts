@@ -50,7 +50,6 @@ export class PdfService {
   private loadTemplates() {
     const templatesDir = path.join(__dirname, 'templates');
     if (!fs.existsSync(templatesDir)) {
-      console.warn('Templates directory not found at:', templatesDir);
       return;
     }
     const templateFiles = fs.readdirSync(templatesDir).filter(f => f.endsWith('.hbs'));
@@ -59,7 +58,6 @@ export class PdfService {
       const templatePath = path.join(templatesDir, file);
       const templateContent = fs.readFileSync(templatePath, 'utf-8');
       this.templates.set(templateName, Handlebars.compile(templateContent));
-      console.log(`Loaded template: ${templateName}`);
     });
   }
 

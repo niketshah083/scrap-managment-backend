@@ -28,6 +28,16 @@ import {
 export class PurchaseOrderController {
   constructor(private readonly poService: PurchaseOrderService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'Get all purchase orders for a tenant' })
+  @ApiQuery({ name: 'tenantId', description: 'Tenant UUID', required: true })
+  @ApiResponse({ status: 200, description: 'Returns all purchase orders' })
+  async getAllPOs(
+    @Query('tenantId') tenantId: string,
+  ): Promise<POSearchResult[]> {
+    return this.poService.getAllPOs(tenantId);
+  }
+
   @Get('search')
   @ApiOperation({ summary: 'Search purchase orders by query string' })
   @ApiQuery({ name: 'query', description: 'Search query (min 2 characters)', required: true })
