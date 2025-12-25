@@ -5,3 +5,7 @@
 /dist
 
 /android
+
+# Uploaded files (keep folder structure but ignore contents)
+/uploads/*
+!/uploads/.gitkeep
